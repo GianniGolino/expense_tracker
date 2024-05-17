@@ -1,10 +1,8 @@
-import 'package:expense_tracker/model/currency.dart';
 import 'package:expense_tracker/model/expense.dart';
-import 'package:expense_tracker/model/expense_category.dart';
+import 'package:expense_tracker/model/helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:grouped_list/grouped_list.dart';
-import 'package:intl/intl.dart';
 
 class ExpenseListViewWidget extends StatefulWidget {
   const ExpenseListViewWidget(
@@ -32,7 +30,7 @@ class _ExpenseListViewWidgetState extends State<ExpenseListViewWidget> {
       groupSeparatorBuilder: (value) {
         return Padding(
           padding: const EdgeInsets.only(left: 28.0, bottom: 8, top: 8),
-          child: Text(formattedDate(value)),
+          child: Text(formattedDateAsddMMM(value)),
         );
       },
       separator: const SizedBox(height: 8),
@@ -132,41 +130,41 @@ class _ExpenseListViewWidgetState extends State<ExpenseListViewWidget> {
     );
   }
 
-  //TODO to potentially delete if we rename the currency enum values and use them directly
-  String showCurrency(Currency currency) {
-    switch (currency) {
-      case Currency.euro:
-        return 'EUR';
-      case Currency.dollar:
-        return 'USD';
-      case Currency.britishPound:
-        return 'GBP';
-      default:
-        return 'EUR';
-    }
-  }
+//  //TODO to potentially delete if we rename the currecy enum values and use them directly
+//   String showCurrency(Currency currency) {
+//     switch (currency) {
+//       case Currency.euro:
+//         return 'EUR';
+//       case Currency.dollar:
+//         return 'USD';
+//       case Currency.britishPound:
+//         return 'GBP';
+//       default:
+//         return 'EUR';
+//     }
+//   }
 
-  String showCategory(ExpenseCategory category) {
-    switch (category) {
-      case ExpenseCategory.medical:
-        return 'Spese mediche';
-      case ExpenseCategory.grocery:
-        return 'Spese cibo e casa';
-      case ExpenseCategory.restaurantsAndBars:
-        return 'Cene ed aperitivi';
-      case ExpenseCategory.padel:
-        return 'Padel';
-      case ExpenseCategory.shopping:
-        return 'Shopping';
-      case ExpenseCategory.subscriptions:
-        return 'Abbonamenti';
-      default:
-        return '';
-    }
-  }
+//   String showCategory(ExpenseCategory category) {
+//     switch (category) {
+//       case ExpenseCategory.medical:
+//         return 'Spese mediche';
+//       case ExpenseCategory.grocery:
+//         return 'Spese cibo e casa';
+//       case ExpenseCategory.restaurantsAndBars:
+//         return 'Cene ed aperitivi';
+//       case ExpenseCategory.padel:
+//         return 'Padel';
+//       case ExpenseCategory.shopping:
+//         return 'Shopping';
+//       case ExpenseCategory.subscriptions:
+//         return 'Abbonamenti';
+//       default:
+//         return '';
+//     }
+//   }
 
-  String formattedDate(date) {
-    final formatter = DateFormat('dd-MMM');
-    return formatter.format(date);
-  }
+//   String formattedDate(date) {
+//     final formatter = DateFormat('dd-MMM');
+//     return formatter.format(date);
+//   }
 }

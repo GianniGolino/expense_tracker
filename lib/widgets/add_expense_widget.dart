@@ -1,15 +1,18 @@
-import 'package:expense_tracker/model/currency.dart';
 import 'package:expense_tracker/model/expense.dart';
-import 'package:expense_tracker/model/expense_category.dart';
+import 'package:expense_tracker/model/helpers.dart';
 import 'package:expense_tracker/pages/navigation_pages/body_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:intl/intl.dart';
 
 class AddExpenseWidget extends StatefulWidget {
-  const AddExpenseWidget({super.key, this.onExpenseAdded, this.expenseToEdit});
+  const AddExpenseWidget(
+      {super.key,
+      this.onExpenseAdded,
+      this.expenseToEdit,
+      this.onExpenseEdited});
 
   final void Function(Expense)? onExpenseAdded;
+  final void Function(Expense)? onExpenseEdited;
   final Expense? expenseToEdit;
 
   @override
@@ -30,15 +33,16 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
     '🛍️ Shopping',
     '💲 Abbonamenti'
   ];
+
   @override
   void initState() {
-    if (expenseToEdit != null) {
-      importController.text = expenseToEdit!.amount.toString();
-      _selectedDate = expenseToEdit!.date;
-      _selectedCurrency = getCurrencyString(expenseToEdit!.currency);
-      _selectedCategory = getCategoryString(expenseToEdit!.category);
+    if (widget.expenseToEdit != null) {
+      importController.text = widget.expenseToEdit!.amount.toString();
+      _selectedDate = widget.expenseToEdit!.date;
+      _selectedCurrency = getCurrencyString(widget.expenseToEdit!.currency);
+      _selectedCategory = getCategoryString(widget.expenseToEdit!.category);
       _buttonText = 'Salva';
-      expenseToEdit = null;
+      //expenseToEdit = null;
     }
     super.initState();
   }
@@ -149,7 +153,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                 Text(
                   _selectedDate == null
                       ? 'Aggiungi una data'
-                      : formattedDate(_selectedDate),
+                      : formattedDateAsddMMMyyyy(_selectedDate),
                   style: const TextStyle(color: Colors.black),
                 ),
                 const Gap(8),
@@ -184,10 +188,23 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                               borderRadius: BorderRadius.circular(15)),
                           backgroundColor: Theme.of(context).primaryColor),
                       onPressed: () {
-                        if (addExpense() != null) {
-                          widget.onExpenseAdded!(addExpense()!);
-                          Navigator.of(context).pop();
+                        //TODO capire se si può usare un valore scriminante diverso da _buttonText
+                        //TODO fare prova con vecchio codice
+
+                        if (expenseToEdit == null) {
+                          if (addExpense() != null) {
+                            widget.onExpenseAdded!(addExpense()!);
+                          } else {
+                            showCustomDialogue(context);
+                          }
+                        } else {
+                          if (updateExpense() != null) {
+                            widget.onExpenseEdited!(updateExpense()!);
+                          } else {
+                            showCustomDialogue(context);
+                          }
                         }
+                        Navigator.of(context).pop();
                       },
                       child: Text(_buttonText,
                           style: const TextStyle(color: Colors.white)),
@@ -203,23 +220,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
   Expense? addExpense() {
     final double? enteredImport = double.tryParse(importController.text);
     if (enteredImport == null || enteredImport <= 0 || _selectedDate == null) {
-      showDialog(
-          context: context,
-          builder: (ctx) {
-            return AlertDialog(
-              title: const Text('Dati non validi'),
-              content: const Text(
-                  'Assicurarsi di inserire un importo valido ed una data.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(ctx).pop();
-                  },
-                  child: const Text('Indietro'),
-                ),
-              ],
-            );
-          });
+      showCustomDialogue(context);
       return null;
     } else {
       return Expense(
@@ -230,101 +231,19 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
     }
   }
 
-  void updateExpense() {
+  //nuovo
+  Expense? updateExpense() {
     final double? enteredImport = double.tryParse(importController.text);
     if (enteredImport == null || enteredImport <= 0 || _selectedDate == null) {
-      // Show error dialog
-      return;
-    }
-
-    final updatedExpense = Expense(
-      // Assuming there's an ID for each expense
-      amount: enteredImport,
-      date: _selectedDate!,
-      currency: getCurrency(_selectedCurrency),
-      category: getCategory(_selectedCategory),
-    );
-    // Pass the updated expense to the callback function
-    widget.onExpenseAdded!(updatedExpense);
-  }
-  // void updateExpense() {
-  //   final double? enteredImport = double.tryParse(importController.text);
-  //   if (enteredImport == null || enteredImport <= 0 || _selectedDate == null) {
-  //     // Show error dialog
-  //     return;
-  //   }
-
-  //   final updatedExpense = Expense(
-  //     // Assuming there's an ID for each expense
-  //     amount: enteredImport,
-  //     date: _selectedDate!,
-  //     currency: getCurrency(_selectedCurrency),
-  //     category: getCategory(_selectedCategory),
-  //   );
-  //   // Pass the updated expense to the callback function
-  //   widget.onExpenseAdded(updatedExpense);
-  // }
-
-  Currency getCurrency(String selectedValue) {
-    if (selectedValue == 'EUR') {
-      return Currency.euro;
-    } else if (selectedValue == 'USD') {
-      return Currency.dollar;
+      showCustomDialogue(context);
+      return null;
     } else {
-      return Currency.britishPound;
+      Expense updatedExpense = Expense(
+          amount: enteredImport,
+          date: _selectedDate!,
+          currency: getCurrency(_selectedCurrency),
+          category: getCategory(_selectedCategory));
+      return updatedExpense;
     }
-  }
-
-  String getCurrencyString(Currency existingCurrency) {
-    if (existingCurrency == Currency.euro) {
-      return 'EUR';
-    } else if (existingCurrency == Currency.dollar) {
-      return 'USD';
-    } else {
-      return 'GBP';
-    }
-  }
-
-  ExpenseCategory getCategory(String selectedCategory) {
-    switch (selectedCategory) {
-      case '🛒 Spese cibo e casa':
-        return ExpenseCategory.grocery;
-      case '🏥 Spese mediche':
-        return ExpenseCategory.medical;
-      case '🍸 Cene ed aperitivi':
-        return ExpenseCategory.restaurantsAndBars;
-      case '🎾 Padel':
-        return ExpenseCategory.padel;
-      case '🛍️ Shopping':
-        return ExpenseCategory.shopping;
-      case '💲 Abbonamenti':
-        return ExpenseCategory.subscriptions;
-      default:
-        return ExpenseCategory.shopping;
-    }
-  }
-
-  String getCategoryString(existingCategory) {
-    switch (existingCategory) {
-      case ExpenseCategory.grocery:
-        return '🛒 Spese cibo e casa';
-      case ExpenseCategory.medical:
-        return '🏥 Spese mediche';
-      case ExpenseCategory.restaurantsAndBars:
-        return '🍸 Cene ed aperitivi';
-      case ExpenseCategory.padel:
-        return '🎾 Padel';
-      case ExpenseCategory.shopping:
-        return '🛍️ Shopping';
-      case ExpenseCategory.subscriptions:
-        return '💲 Abbonamenti';
-      default:
-        return '🛍️ Shopping';
-    }
-  }
-
-  String formattedDate(date) {
-    final formatter = DateFormat('dd-MMM-yyyy');
-    return formatter.format(date);
   }
 }

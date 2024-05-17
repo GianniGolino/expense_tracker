@@ -5,11 +5,11 @@ import 'package:intl/intl.dart';
 
 class Expense {
   final String id = const Uuid().v1();
-  final double amount;
-  final DateTime date;
+  double amount;
+  DateTime date;
   late final String emoji;
-  final Currency currency;
-  final ExpenseCategory category;
+  Currency currency;
+  ExpenseCategory category;
 
   Expense(
       {required this.amount,

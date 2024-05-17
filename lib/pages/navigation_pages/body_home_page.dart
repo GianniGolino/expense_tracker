@@ -26,7 +26,7 @@ final expense2 = Expense(
     currency: Currency.euro,
     category: ExpenseCategory.padel);
 
-final List<Expense> expenseList = [expense, expense2];
+List<Expense> expenseList = [expense, expense2];
 double totalExpense = 350;
 double todayExpenses = 0;
 
@@ -79,16 +79,20 @@ class _BodyHomePageState extends State<BodyHomePage> {
                         children: [
                           IconButton(
                               onPressed: () {
+                                setState(() {
+                                  expenseToEdit = null;
+                                });
                                 showModalBottomSheet(
                                     context: context,
                                     builder: (context) {
                                       return AddExpenseWidget(
-                                          onExpenseAdded: (p0) {
-                                        setState(() {
-                                          expenseList.add(p0);
-                                          totalExpense += p0.amount;
-                                        });
-                                      });
+                                        onExpenseAdded: (p0) {
+                                          setState(() {
+                                            expenseList.add(p0);
+                                            totalExpense += p0.amount;
+                                          });
+                                        },
+                                      );
                                     });
                               },
                               icon: const Icon(
@@ -131,6 +135,12 @@ class _BodyHomePageState extends State<BodyHomePage> {
                             builder: (ctx) {
                               return AddExpenseWidget(
                                 expenseToEdit: expenseToEdit,
+                                onExpenseEdited: (updatedExpense) {
+                                  setState(() {
+                                    final int index = expenseList.indexOf(p0);
+                                    expenseList.setAll(index, [updatedExpense]);
+                                  });
+                                },
                               );
                             });
                       },
