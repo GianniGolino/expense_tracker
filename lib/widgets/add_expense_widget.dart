@@ -96,11 +96,6 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                       ),
                       DropdownMenuItem(value: 'GBP', child: Text('GBP'))
                     ],
-                    // items: Currency.values
-                    //     .map((currency) => DropdownMenuItem(
-                    //         value: currency,
-                    //         child: Text(currency.name.toString())))
-                    //     .toList(),
                     onChanged: (value) {
                       setState(() {
                         _selectedCurrency = value!;

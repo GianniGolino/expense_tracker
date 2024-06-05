@@ -1,5 +1,6 @@
 import 'package:expense_tracker/model/expense_category.dart';
 import 'package:expense_tracker/model/currency.dart';
+import 'package:expense_tracker/model/helpers.dart';
 import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
 
@@ -23,24 +24,5 @@ class Expense {
   String formattedDate(date) {
     final formatter = DateFormat('dd-MM-yyyy');
     return formatter.format(date);
-  }
-
-  String getEmoji(ExpenseCategory category) {
-    switch (category) {
-      case ExpenseCategory.grocery:
-        return '🛒';
-      case ExpenseCategory.medical:
-        return '🏥';
-      case ExpenseCategory.padel:
-        return '🎾';
-      case ExpenseCategory.restaurantsAndBars:
-        return '🍸';
-      case ExpenseCategory.shopping:
-        return '🛍️';
-      case ExpenseCategory.subscriptions:
-        return '💲';
-      default:
-        return '';
-    }
   }
 }

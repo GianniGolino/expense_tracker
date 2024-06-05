@@ -129,42 +129,4 @@ class _ExpenseListViewWidgetState extends State<ExpenseListViewWidget> {
       },
     );
   }
-
-//  //TODO to potentially delete if we rename the currecy enum values and use them directly
-//   String showCurrency(Currency currency) {
-//     switch (currency) {
-//       case Currency.euro:
-//         return 'EUR';
-//       case Currency.dollar:
-//         return 'USD';
-//       case Currency.britishPound:
-//         return 'GBP';
-//       default:
-//         return 'EUR';
-//     }
-//   }
-
-//   String showCategory(ExpenseCategory category) {
-//     switch (category) {
-//       case ExpenseCategory.medical:
-//         return 'Spese mediche';
-//       case ExpenseCategory.grocery:
-//         return 'Spese cibo e casa';
-//       case ExpenseCategory.restaurantsAndBars:
-//         return 'Cene ed aperitivi';
-//       case ExpenseCategory.padel:
-//         return 'Padel';
-//       case ExpenseCategory.shopping:
-//         return 'Shopping';
-//       case ExpenseCategory.subscriptions:
-//         return 'Abbonamenti';
-//       default:
-//         return '';
-//     }
-//   }
-
-//   String formattedDate(date) {
-//     final formatter = DateFormat('dd-MMM');
-//     return formatter.format(date);
-//   }
 }

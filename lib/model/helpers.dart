@@ -123,3 +123,41 @@ String formattedDateAsddMMM(date) {
   final formatter = DateFormat('dd-MMM');
   return formatter.format(date);
 }
+
+Color getColor(ExpenseCategory category) {
+  switch (category) {
+    case ExpenseCategory.grocery:
+      return Colors.green;
+    case ExpenseCategory.medical:
+      return Colors.green;
+    case ExpenseCategory.padel:
+      return Colors.green;
+    case ExpenseCategory.restaurantsAndBars:
+      return Colors.green;
+    case ExpenseCategory.shopping:
+      return Colors.green;
+    case ExpenseCategory.subscriptions:
+      return Colors.green;
+    default:
+      return Colors.transparent;
+  }
+}
+
+String getEmoji(ExpenseCategory category) {
+  switch (category) {
+    case ExpenseCategory.grocery:
+      return '🛒';
+    case ExpenseCategory.medical:
+      return '🏥';
+    case ExpenseCategory.padel:
+      return '🎾';
+    case ExpenseCategory.restaurantsAndBars:
+      return '🍸';
+    case ExpenseCategory.shopping:
+      return '🛍️';
+    case ExpenseCategory.subscriptions:
+      return '💲';
+    default:
+      return '';
+  }
+}
