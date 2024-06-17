@@ -1,4 +1,5 @@
 import 'package:expense_tracker/controllers/expense_controller.dart';
+import 'package:expense_tracker/model/expense.dart';
 import 'package:expense_tracker/model/expense_category.dart';
 import 'package:expense_tracker/model/helpers.dart';
 import 'package:expense_tracker/pages/navigation_pages/body_home_page.dart';
@@ -8,7 +9,9 @@ import 'package:get/instance_manager.dart';
 import 'package:get/state_manager.dart';
 
 class ChartListViewWidget extends StatelessWidget {
-  const ChartListViewWidget({super.key});
+  const ChartListViewWidget({super.key, required this.expenses});
+
+  final List<Expense> expenses;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +20,7 @@ class ChartListViewWidget extends StatelessWidget {
     return Obx(() {
       final Map<ExpenseCategory, double> categoryTotals = {};
 
-      for (var expense in expenseController.expenseList) {
+      for (var expense in expenseController.filteredExpenseList) {
         if (categoryTotals.containsKey(expense.category)) {
           categoryTotals[expense.category] =
               categoryTotals[expense.category]! + expense.amount;
@@ -31,23 +34,33 @@ class ChartListViewWidget extends StatelessWidget {
 
       return ListView.separated(
         itemBuilder: (context, index) {
-          return Row(
+          return Column(
             children: [
-              Text(
-                '${getCategoryString(groupedExpensesList[index].key)}:',
-                style: const TextStyle(fontSize: 20),
+              Row(
+                children: [
+                  Text(
+                    '${getCategoryString(groupedExpensesList[index].key)}:',
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  const Gap(8),
+                  Text(
+                      '${groupedExpensesList[index].value.toStringAsFixed(2)}€',
+                      style: const TextStyle(fontSize: 20)),
+                  // const Padding(
+                  //   padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  //   child: Text('-', style: TextStyle(fontSize: 20)),
+                  // ),
+                ],
               ),
               const Gap(8),
-              Text('${groupedExpensesList[index].value.toStringAsFixed(2)}€',
-                  style: const TextStyle(fontSize: 20)),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text('-', style: TextStyle(fontSize: 20)),
+              Row(
+                children: [
+                  const Gap(8),
+                  Text(
+                      '• ${((groupedExpensesList[index].value / totalExpense) * 100).toStringAsFixed(2)}%',
+                      style: const TextStyle(fontSize: 20)),
+                ],
               ),
-              Text(
-                  '${((groupedExpensesList[index].value / totalExpense) * 100).toStringAsFixed(2)}%',
-                  style: const TextStyle(fontSize: 20)),
-              //Text(totalExpense.toString())
             ],
           );
         },

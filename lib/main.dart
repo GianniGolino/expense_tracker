@@ -1,3 +1,4 @@
+import 'package:expense_tracker/controllers/date_controller.dart';
 import 'package:expense_tracker/controllers/expense_controller.dart';
 import 'package:expense_tracker/pages/welcome_page.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:get/instance_manager.dart';
 
 void main() {
   Get.put(ExpenseController());
+  Get.put(DateController());
   runApp(const ExpenseTracker());
 }
 
